@@ -1,5 +1,6 @@
 package com.pms.patientservice.service;
 
+import com.pms.patientservice.dto.PatientRequestDTO;
 import com.pms.patientservice.dto.PatientResponseDTO;
 import com.pms.patientservice.mapper.PatientMapper;
 import com.pms.patientservice.model.Patient;
@@ -19,8 +20,9 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientResponseDTO createPatient(Patient patient) {
+    public PatientResponseDTO createPatient(PatientRequestDTO patientRequestDTO) {
         try {
+            Patient patient = PatientMapper.toPatientModel(patientRequestDTO);
             Patient returnedPatient = patientRepository.save(patient);
             return PatientMapper.toPatientResponseDto(returnedPatient);
         } catch (Exception e) {
