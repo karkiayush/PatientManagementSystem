@@ -7,8 +7,8 @@ import com.pms.patientservice.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
-import static com.pms.patientservice.mapper.PatientMapper.toPatientResponseDto;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -34,5 +34,18 @@ public class PatientServiceImpl implements PatientService {
         List<Patient> patients = patientRepository.findAll();
         /*converting the Patient domain entity object to PatientResponseDTO object & then returning*/
         return patients.stream().map(PatientMapper::toPatientResponseDto).toList();
+    }
+
+    @Override
+    public PatientResponseDTO getPatientById(UUID id) {
+        /*
+        Optional<Patient> patient = patientRepository.findById(id);
+        if(patient.isPresent()){
+            return PatientMapper.toPatientResponseDto(patient.get());
+        } else {
+            System.out.println("Patient not found with id: " + id);
+            return null;
+        }*/
+        return patientRepository.findById(id).map(PatientMapper::toPatientResponseDto).orElse(null);
     }
 }
