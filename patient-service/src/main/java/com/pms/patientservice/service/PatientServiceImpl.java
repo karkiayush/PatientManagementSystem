@@ -2,6 +2,7 @@ package com.pms.patientservice.service;
 
 import com.pms.patientservice.dto.PatientRequestDTO;
 import com.pms.patientservice.dto.PatientResponseDTO;
+import com.pms.patientservice.exception.DeletePatientFailedException;
 import com.pms.patientservice.exception.EmailAlreadyExistsException;
 import com.pms.patientservice.exception.PatientNotFoundException;
 import com.pms.patientservice.exception.UpdatePatientFailedException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -64,8 +66,7 @@ public class PatientServiceImpl implements PatientService {
         Patient patient = patientRepository.findById(id).orElseThrow(
                 () -> new PatientNotFoundException("Patient not found with id: " + id)
         );
-
-        if (patientRepository.existsByEmail(patientRequestDTO.getEmail())) {
+        if (patientRepository.existsByEmail(patientRequestDTO.getEmail()) && !patient.getEmail().equals(patientRequestDTO.getEmail())) {
             throw new EmailAlreadyExistsException("Email already exists" + patientRequestDTO.getEmail());
         }
         patient.setFullName(patientRequestDTO.getFullName());
@@ -84,6 +85,20 @@ public class PatientServiceImpl implements PatientService {
             return PatientMapper.toPatientResponseDto(updatedPatient);
         } catch (Exception e) {
             throw new UpdatePatientFailedException("Failed to update patient: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public PatientResponseDTO deletePatient(UUID id) {
+        Optional<Patient> patientToBeDeleted = patientRepository.findById(id);
+        if (patientToBeDeleted.isEmpty()) {
+            throw new PatientNotFoundException("Patient with id" + id + " not found");
+        }
+        try {
+            patientRepository.deleteById(id);
+            return PatientMapper.toPatientResponseDto(patientToBeDeleted.get());
+        } catch (Exception e) {
+            throw new DeletePatientFailedException(e.getMessage());
         }
     }
 }

@@ -46,4 +46,12 @@ public class GlobalExceptionHandler {
         errorMap.put("message", e.getMessage());
         return ResponseEntity.badRequest().body(errorMap);
     }
+
+    @ExceptionHandler(DeletePatientFailedException.class)
+    public ResponseEntity<Map<String, String>> handleDeletePatientFailed(DeletePatientFailedException e) {
+        log.warn("Delete patient failed: {}", e.getMessage());
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("message", e.getMessage());
+        return ResponseEntity.badRequest().body(errorMap);
+    }
 }

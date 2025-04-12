@@ -68,4 +68,9 @@ public class PatientController {
     }
 
     /*DELETE operation*/
+    @DeleteMapping("/{id}")
+    public ResponseEntity<PatientResponseDTO> deletePatient(@PathVariable UUID id) {
+        Optional<PatientResponseDTO> deletedPatient = Optional.ofNullable(patientService.deletePatient(id));
+        return deletedPatient.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
