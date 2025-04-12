@@ -2,6 +2,8 @@ package com.pms.patientservice.controller;
 
 import com.pms.patientservice.dto.PatientRequestDTO;
 import com.pms.patientservice.dto.PatientResponseDTO;
+import com.pms.patientservice.exception.PatientNotFoundException;
+import com.pms.patientservice.mapper.PatientMapper;
 import com.pms.patientservice.model.Patient;
 import com.pms.patientservice.repository.PatientRepository;
 import com.pms.patientservice.service.PatientService;
@@ -18,9 +20,11 @@ import java.util.UUID;
 @RequestMapping("/patients")
 public class PatientController {
     private final PatientService patientService;
+    private final PatientRepository patientRepository;
 
-    public PatientController(PatientService patientService) {
+    public PatientController(PatientService patientService, PatientRepository patientRepository) {
         this.patientService = patientService;
+        this.patientRepository = patientRepository;
     }
 
     /*CREATE operation*/
@@ -57,7 +61,11 @@ public class PatientController {
     }
 
     /*UPDATE operation*/
-
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable UUID id, @RequestBody PatientRequestDTO patientRequestDTO) {
+        Optional<PatientResponseDTO> patient = Optional.ofNullable(patientService.updatePatient(id, patientRequestDTO));
+        return patient.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
     /*DELETE operation*/
 }

@@ -3,11 +3,15 @@ package com.pms.patientservice.service;
 import com.pms.patientservice.dto.PatientRequestDTO;
 import com.pms.patientservice.dto.PatientResponseDTO;
 import com.pms.patientservice.exception.EmailAlreadyExistsException;
+import com.pms.patientservice.exception.PatientNotFoundException;
+import com.pms.patientservice.exception.UpdatePatientFailedException;
 import com.pms.patientservice.mapper.PatientMapper;
 import com.pms.patientservice.model.Patient;
 import com.pms.patientservice.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,5 +57,33 @@ public class PatientServiceImpl implements PatientService {
             return null;
         }*/
         return patientRepository.findById(id).map(PatientMapper::toPatientResponseDto).orElse(null);
+    }
+
+    @Override
+    public PatientResponseDTO updatePatient(UUID id, PatientRequestDTO patientRequestDTO) {
+        Patient patient = patientRepository.findById(id).orElseThrow(
+                () -> new PatientNotFoundException("Patient not found with id: " + id)
+        );
+
+        if (patientRepository.existsByEmail(patientRequestDTO.getEmail())) {
+            throw new EmailAlreadyExistsException("Email already exists" + patientRequestDTO.getEmail());
+        }
+        patient.setFullName(patientRequestDTO.getFullName());
+        patient.setEmail(patientRequestDTO.getEmail());
+        patient.setGender(patientRequestDTO.getGender());
+        patient.setAddress(patientRequestDTO.getAddress());
+        patient.setBirthDate(LocalDate.parse(patientRequestDTO.getDateOfBirth()));
+        patient.setRegistrationDate(LocalDate.parse(patientRequestDTO.getRegistrationDate()));
+        patient.setPhoneNumber(String.valueOf(patientRequestDTO.getPhoneNumber()));
+
+        LocalDate dob = LocalDate.parse(patientRequestDTO.getDateOfBirth());
+        int age = Period.between(dob, LocalDate.now()).getYears();
+        patient.setAge(age);
+        try {
+            Patient updatedPatient = patientRepository.save(patient);
+            return PatientMapper.toPatientResponseDto(updatedPatient);
+        } catch (Exception e) {
+            throw new UpdatePatientFailedException("Failed to update patient: " + e.getMessage());
+        }
     }
 }

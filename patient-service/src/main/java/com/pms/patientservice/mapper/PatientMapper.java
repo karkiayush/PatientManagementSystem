@@ -12,7 +12,7 @@ public class PatientMapper {
         PatientResponseDTO patientResponseDTO = new PatientResponseDTO();
 
         patientResponseDTO.setId(patient.getId().toString());
-        patientResponseDTO.setPatientName(patient.getFirstName() + " " + patient.getLastName());
+        patientResponseDTO.setPatientName(patient.getFullName());
         patientResponseDTO.setGender(patient.getGender());
         patientResponseDTO.setDateOfBirth(patient.getBirthDate().toString());
         patientResponseDTO.setEmail(patient.getEmail());
@@ -29,15 +29,14 @@ public class PatientMapper {
         LocalDate dob = LocalDate.parse(patientRequestDTO.getDateOfBirth());
         int age = Period.between(dob, LocalDate.now()).getYears();
 
-        patient.setFirstName(patientRequestDTO.getFirstName());
-        patient.setLastName(patientRequestDTO.getLastName());
+        patient.setFullName(patientRequestDTO.getFullName());
         patient.setEmail(patientRequestDTO.getEmail());
+        patient.setGender(patientRequestDTO.getGender());
+        patient.setAddress(patientRequestDTO.getAddress());
         patient.setBirthDate(LocalDate.parse(patientRequestDTO.getDateOfBirth()));
         patient.setAge(age);
-        patient.setGender(patientRequestDTO.getGender());
-        patient.setPhoneNumber(patientRequestDTO.getPhoneNumber());
-        patient.setAddress(patientRequestDTO.getAddress());
         patient.setRegistrationDate(LocalDate.parse(patientRequestDTO.getRegistrationDate()));
+        patient.setPhoneNumber(patientRequestDTO.getPhoneNumber());
 
         return patient;
     }

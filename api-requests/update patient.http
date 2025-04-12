@@ -1,15 +1,14 @@
 ### GET request to example server
-POST http://localhost:4000/patients
+PUT http://localhost:4000/patients/3940a4ff-b3af-4115-9040-8d00283c6705
 Content-Type: application/json
 
 {
-  "fullName": "David Taylor",
-  "email": "david.taylor@example.com",
+  "fullName": "steve smith",
+  "email": "steven_smith@example.com",
   "address": "123 Cedar Drive, Springfield, USA",
   "gender": "Male",
   "dateOfBirth": "1983-12-05",
   "phoneNumber": "2223334445",
   "registrationDate": "2024-03-07"
 }
-
 ###

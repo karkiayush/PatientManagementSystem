@@ -11,11 +11,7 @@ import lombok.Setter;
 public class PatientRequestDTO {
     @NotBlank
     @Size(max = 50, message = "Name can't exceed 50 characters")
-    private String firstName;
-
-    @NotBlank
-    @Size(max = 50, message = "Name can't exceed 50 characters")
-    private String lastName;
+    private String fullName;
 
     @NotBlank(message = "Email address is required")
     @Email(message = "Email address should be valid")

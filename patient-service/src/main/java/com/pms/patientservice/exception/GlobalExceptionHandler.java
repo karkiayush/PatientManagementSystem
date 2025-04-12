@@ -30,4 +30,20 @@ public class GlobalExceptionHandler {
         emailExistsErrorMap.put("message", e.getMessage());
         return ResponseEntity.badRequest().body(emailExistsErrorMap);
     }
+
+    @ExceptionHandler(PatientNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handlePatientNotFound(PatientNotFoundException e) {
+        log.warn("Patient not found: {}", e.getMessage());
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("message", e.getMessage());
+        return ResponseEntity.badRequest().body(errorMap);
+    }
+
+    @ExceptionHandler(UpdatePatientFailedException.class)
+    public ResponseEntity<Map<String, String>> handleUpdatePatientFailed(UpdatePatientFailedException e) {
+        log.warn("Update patient failed: {}", e.getMessage());
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("message", e.getMessage());
+        return ResponseEntity.badRequest().body(errorMap);
+    }
 }
