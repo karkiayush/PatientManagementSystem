@@ -19,7 +19,7 @@ public class BillingGrpcService extends BillingServiceGrpc.BillingServiceImplBas
             /*once we're ready to respond to the request, we use StreamObserver, which is a powerful concept in gRPC as it allows earning multiple responses to the client at the same time and also accept back-forth communication to that client*/
             StreamObserver<billing.BillingResponse> responseObserver
     ) {
-        log.info("Create billing account request received: {}", billingRequest.toString());
+        log.info("Create billing account request received\n{}", billingRequest.toString());
         /*
          * Any business logic in the middle
          * */

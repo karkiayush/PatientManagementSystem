@@ -1,0 +1,9 @@
+# 1st bit: address of server, 2nd bit: name of the service, 3rd bit: name of the rpc method
+GRPC localhost:9001/BillingService/CreateBillingAccount
+Content-Type: application/json
+
+{
+  "patientId": "123MM93",
+  "name": "Marc Marcquez",
+  "email": "Marc1@gmail.com"
+}
